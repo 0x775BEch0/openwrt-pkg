@@ -41,7 +41,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Init action system
+    - name: Init ubuntu
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -54,7 +54,8 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Clone openwrt REPO_URL
+    - name: Clone openwrt Repo
+      if: (!cancelled())
       working-directory: /workdir
       run: |
         df -hT $PWD
@@ -62,6 +63,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: DIY_P1_SH
+      if: (!cancelled())
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
@@ -69,12 +71,15 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
+      if: (!cancelled())
       run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
+      if: (!cancelled())
       run: cd openwrt && ./scripts/feeds install -a
 
     - name: DIY_P2_SH
+      if: (!cancelled())
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
@@ -82,7 +87,7 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    - name: set default
+    - name: Set Defaults
       if: (  !cancelled() )
       run: |
         cat $GITHUB_WORKSPACE/zzz-default-settings > /workdir/openwrt/package/lean/default-settings/files/zzz-default-settings
@@ -96,6 +101,7 @@ jobs:
 
     - name: Download Packages
       id: package
+      if: (!cancelled())
       run: |
         cd openwrt
         make defconfig
@@ -106,6 +112,7 @@ jobs:
 
     - name: Make Compile
       id: compile
+      if: (!cancelled())
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
@@ -119,7 +126,7 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: upload bin
+    - name: Upload bin artifact
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
@@ -148,7 +155,7 @@ jobs:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: Upload firmware to cowtransfer
+    - name: Upload firmware cowtransfer
       id: cowtransfer
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
       run: |
