@@ -41,7 +41,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: 环境初始化
+    - name: Init action system
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -135,6 +135,9 @@ jobs:
         tar czvf packages.tgz packages
         rm -rf packages
         rm -rf sha256sums
+        rm -rf openwrt-x86-64-generic-kernel.bin
+        rm -rf openwrt-x86-64-generic-squashfs-rootfs.img.gz
+        rm -rf openwrt-x86-64-generic.manifest
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
