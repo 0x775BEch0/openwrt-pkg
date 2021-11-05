@@ -14,6 +14,7 @@ uci set network.wan=interface
 uci set network.wan.proto='dhcp'
 uci set network.wan.type='bridge'
 uci set network.wan.ifname='eth0'
+uci set network.lan.ifname='eth1'
 uci commit network
 
 uci set firewall.@zone[0].forward=ACCEPT
@@ -22,6 +23,12 @@ uci set firewall.@zone[0].input=ACCEPT
 uci set firewall.@zone[0].output=ACCEPT
 uci set firewall.@zone[0].forward=ACCEPT
 uci commit firewall
+
+uci set dropbear.@dropbear[0].Interface='wan'
+uci commit dropbear
+
+uci set  shadowsocksr.@access_control[0].Interface=['lan','wan']
+uci commit shadowsocksr
 
 rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm
 rm -f /usr/lib/lua/luci/view/admin_status/index/upnp.htm
