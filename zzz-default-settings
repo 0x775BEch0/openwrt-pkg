@@ -19,7 +19,7 @@ uci set network.lan.ifname='eth1'
 uci commit network
 
 uci set firewall.@zone[0].forward=ACCEPT
-uci set firewall.@zone[0].network='wan'
+uci set firewall.@zone[0].network=['wan','wan6']
 uci set firewall.@zone[0].input=ACCEPT
 uci set firewall.@zone[0].output=ACCEPT
 uci set firewall.@zone[0].forward=ACCEPT
