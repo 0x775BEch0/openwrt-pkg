@@ -1,21 +1,20 @@
 #!/bin/sh
-
+# default-setting
+#
 uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/argon'
 uci commit luci
-
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
 uci commit system
 
-uci set fstab.@global[0].anon_mount=1
-uci commit fstab
-
+# 外网通过dhcp获取ip
 uci set network.wan=interface
 uci set network.wan.proto='dhcp'
 uci set network.wan.type='bridge'
 uci set network.wan.ifname='eth0'
 uci set network.lan.ifname='eth1'
+# 默认内网 ip
 uci set network.lan.ipaddr='192.168.1.254'
 uci commit network
 
@@ -28,15 +27,15 @@ uci commit firewall
 
 uci set dropbear.@dropbear[0].Interface='wan'
 uci commit dropbear
-
 uci set  shadowsocksr.@access_control[0].Interface=['lan','wan']
 uci commit shadowsocksr
+uci set fstab.@global[0].anon_mount=1
+uci commit fstab
 
-rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm
-rm -f /usr/lib/lua/luci/view/admin_status/index/upnp.htm
-rm -f /usr/lib/lua/luci/view/admin_status/index/ddns.htm
-rm -f /usr/lib/lua/luci/view/admin_status/index/minidlna.htm
-
+# rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm
+# rm -f /usr/lib/lua/luci/view/admin_status/index/upnp.htm
+# rm -f /usr/lib/lua/luci/view/admin_status/index/ddns.htm
+# rm -f /usr/lib/lua/luci/view/admin_status/index/minidlna.htm
 # sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/aria2.lua
 # sed -i 's/services/nas/g' /usr/lib/lua/luci/view/aria2/overview_status.htm
 # sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/hd_idle.lua
@@ -51,10 +50,8 @@ rm -f /usr/lib/lua/luci/view/admin_status/index/minidlna.htm
 # sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 
 ln -sf /sbin/ip /usr/bin/ip
-
 sed -i 's#downloads.openwrt.org#mirrors.cloud.tencent.com/lede#g' /etc/opkg/distfeeds.conf
 sed -i 's/root::0:0:99999:7:::/root:$1$a7$dQvBJz5LDDevjUZrjdbJj0:0:0:99999:7:::/g' /etc/shadow
-
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/openwrt_luci/ { s/snapshots/releases\/18.06.9/g; }'  /etc/opkg/distfeeds.conf
 
@@ -65,10 +62,7 @@ sed -i '/openwrt_luci/ { s/snapshots/releases\/18.06.9/g; }'  /etc/opkg/distfeed
 # echo '[ -n "$(command -v ip6tables)" ] && ip6tables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53' >> /etc/firewall.user
 
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conflib/wifi/mac80211.sh
-
 echo 'hsts=0' > /root/.wgetrc
-
 rm -rf /tmp/luci-modulecache/
 rm -f /tmp/luci-indexcache
-
 exit 0
