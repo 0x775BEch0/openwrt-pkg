@@ -36,7 +36,7 @@ jobs:
         sudo chown $USER:$GROUPS /workdir
 
     - name: Clone openwrt
-      if: (!cancelled())
+      if: ( !cancelled() )
       id: clone
       working-directory: /workdir
       run: |
@@ -60,7 +60,7 @@ jobs:
         ./scripts/feeds install -a -f
 
     - name: DIY_P2_SH
-      if: (!cancelled())
+      if: ( !cancelled() )
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
@@ -69,13 +69,13 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
     - name: Set Defaults
-      if: (  !cancelled() )
+      if: ( !cancelled() )
       run: |
         cat $GITHUB_WORKSPACE/zzz-default-settings > /workdir/openwrt/package/lean/default-settings/files/zzz-default-settings
 
     - name: Download Packages
       id: package
-      if: (!cancelled())
+      if: ( !cancelled() )
       run: |
         cd openwrt
         make defconfig
@@ -86,7 +86,7 @@ jobs:
 
     - name: Make Compile
       id: compile
-      if: (!cancelled())
+      if: ( !cancelled() )
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
@@ -97,7 +97,7 @@ jobs:
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name: Check space usage
-      if: (!cancelled())
+      if: ( !cancelled() )
       run: df -hT
  
     - name: Organize Files
@@ -111,23 +111,22 @@ jobs:
         rm -rf openwrt-x86-64-generic-kernel.bin
         rm -rf openwrt-x86-64-generic.manifest
         rm -rf sha256sums
-        rm -rf version.buildinfo
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
         
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      if: ( steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() )
       with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_firmware_${{ env.DEVICE_NAME }}_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Get Release Tag
       id: tag
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: ( steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled() )
       run: |
         LEDE=`curl -s "https://api.github.com/repos/coolsnowwolf/lede/releases/latest" |jq -r .tag_name`
-        echo "::set-output name=release_tag::V$(date +"%Y%m%d-%H%M")"
+        echo "::set-output name=release_tag::v$(date +"+%Y%j-%H%M%S")"
         touch release.txt
         [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
         [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
@@ -135,7 +134,7 @@ jobs:
 
     - name: Release Upload
       uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+      if: ( steps.tag.outputs.status == 'success' && !cancelled() )
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -145,7 +144,7 @@ jobs:
 
     - name: Delete older Releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: ( env.UPLOAD_RELEASE == 'true' && !cancelled() )
       with:
         keep_latest: 2
         delete_tags: true
