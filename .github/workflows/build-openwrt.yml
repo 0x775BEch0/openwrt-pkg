@@ -37,14 +37,16 @@ jobs:
 
     - name: Clone openwrt
       if: (!cancelled())
+      id: clone
       working-directory: /workdir
       run: |
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
+        echo "::set-output name=status::success"
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Set Feeds
-      if: (!cancelled())
+    - name: Set Feeds & Package
+      if: ( steps.clone.outputs.status == 'success' && !cancelled())
       run: |
         cd openwrt
         git clone https://github.com/yichya/openwrt-xray package/openwrt-xray 
