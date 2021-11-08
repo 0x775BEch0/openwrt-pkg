@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@main
 
     - name: Init ubuntu
@@ -28,14 +28,14 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync
+        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync 
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Clone openwrt Repo
+    - name: Clone openwrt
       if: (!cancelled())
       working-directory: /workdir
       run: |
@@ -43,23 +43,18 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Update feeds
+    - name: Set Feeds
       if: (!cancelled())
       run: |
         cd openwrt
+        git clone https://github.com/yichya/openwrt-xray package/openwrt-xray 
+        git clone https://github.com/yichya/luci-app-xray package/luci-app-xray
         echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
         echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >> feeds.conf.default
-        echo 'src-git xray https://github.com/yichya/openwrt-xray.git;master' >> feeds.conf.default
-        echo 'src-git xray_luci https://github.com/yichya/luci-app-xray.git;master' >> feeds.conf.default
         echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
         echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
         echo 'src-git vssr https://github.com/jerrykuku/luci-app-vssr.git;master' >> feeds.conf.default
         ./scripts/feeds update -a
-
-    - name: Install feeds
-      if: (!cancelled())
-      run: |
-        cd openwrt
         ./scripts/feeds install -a
 
     - name: DIY_P2_SH
