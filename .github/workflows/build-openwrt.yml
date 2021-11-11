@@ -40,7 +40,9 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
+        cd $GITHUB_WORKSPACE
         versionpk=`git log -1 --format='%h'`
+        cd -
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         version=`git log -1 --format='%h'`
