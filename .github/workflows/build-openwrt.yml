@@ -56,11 +56,11 @@ jobs:
       run: |
         cd openwrt
         git clone https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
+        git clone https://github.com/jerrykuku/luci-app-vssr.git package/luci-app-vssr
         echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
         echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >> feeds.conf.default
         # echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
         # echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
-        echo 'src-git vssr https://github.com/jerrykuku/luci-app-vssr.git;master' >> feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install -a -f
 
