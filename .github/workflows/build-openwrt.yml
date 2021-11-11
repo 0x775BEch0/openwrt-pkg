@@ -128,7 +128,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.clone.outputs.version }}
-         files: ${{ env.FIRMWARE }}/*
+        files: ${{ env.FIRMWARE }}/*
 
     - name: Delete Older Releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
