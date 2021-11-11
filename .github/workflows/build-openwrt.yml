@@ -52,6 +52,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Set Feeds & Package
+      id: feeds
       if: ( steps.clone.outputs.status == 'success' && !cancelled())
       run: |
         cd openwrt
@@ -60,31 +61,33 @@ jobs:
         git clone https://github.com/jerrykuku/luci-app-vssr.git package/luci-app-vssr
         echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
         echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >> feeds.conf.default
-        # echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
-        # echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
+        echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.conf.default
+        echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install -a -f
+        echo "::set-output name=status::success"
 
     - name: Set Defaults
-      if: ( !cancelled() )
+      if: ( steps.feeds.outputs.status == 'success' && !cancelled() )
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         [ -e zzz-default-settings ] && cat zzz-default-settings > openwrt/package/lean/default-settings/files/zzz-default-settings
 
     - name: Download Packages
-      id: package
-      if: ( !cancelled() )
+      id: download
+      if: ( steps.feeds.outputs.status == 'success' && !cancelled() )
       run: |
         cd openwrt
         make defconfig
-        ./scripts/diffconfig.sh > /workdir/diff.config
         make download -j8
+        echo "::set-output name=status::success"
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+        ./scripts/diffconfig.sh > /workdir/diff.config
 
     - name: Make Compile
       id: compile
-      if: ( !cancelled() )
+      if: ( steps.download.outputs.status == 'success' && !cancelled() )
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
@@ -100,7 +103,7 @@ jobs:
  
     - name: Organize Files
       id: organize
-      if: ( steps.compile.outputs.status == 'success'  && !cancelled() )
+      if: ( steps.compile.outputs.status == 'success' && !cancelled() )
       run: |
         cd openwrt/bin/targets/*/*
         mv /workdir/diff.config .
