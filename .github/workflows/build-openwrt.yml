@@ -47,7 +47,7 @@ jobs:
         cd openwrt
         version=`git log -1 --format='%h'`
         echo ${version}-${versionpk}
-        echo "::set-output name=version::$${version}-${versionpk}"
+        echo "::set-output name=version::${version}-${versionpk}"
         echo "::set-output name=status::success"
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
