@@ -20,6 +20,11 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@main
+      id: code
+      run: |
+        df -hT $PWD
+        version=`git log -1 --format='%h'`
+        echo "::set-output name=version::$version"
 
     - name: Init Ubuntu
       env:
@@ -42,10 +47,8 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        gitversion=`git log -1 --format='%h'`
-        echo "::set-output name=gitversion::$gitversion"
-
-        
+        version=`git log -1 --format='%h'`
+        echo "::set-output name=version::$version"
         echo "::set-output name=status::success"
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
@@ -125,7 +128,7 @@ jobs:
       if: ( steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled() )
       run: |
         LEDE=`curl -s "https://api.github.com/repos/coolsnowwolf/lede/releases/latest" |jq -r .tag_name`
-        release_tag=v$(date +"+%Y%j")-${{steps.clone.outputs.gitversion}}
+        release_tag=v$(date +"+%Y%j")-${{steps.clone.outputs.version}}-${{steps.code.outputs.version}}
         echo "::set-output name=release_tag::${release_tag}"
         touch release.txt
         [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
