@@ -67,7 +67,6 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a -f
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        # add code here
 
     - name: Set Defaults
       if: ( !cancelled() )
