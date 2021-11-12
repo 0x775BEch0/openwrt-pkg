@@ -1,4 +1,4 @@
-# OpenWrt-Pkg for x86 Side-Router
+# OpenWrt-Pkg for x86 stick Router
 
 [![Build OpenWrt](https://github.com/0xHO/openwrt-pkg/actions/workflows/build-openwrt.yml/badge.svg?branch=main)](https://github.com/0xHO/openwrt-pkg/actions)
 ![GitHub Stars](https://img.shields.io/github/stars/0xHO/openwrt-pkg.svg?style=flat-square&label=Stars&logo=github)
@@ -17,6 +17,7 @@
 - luci-app-ttyd
 - luci-app-ssr-plus
 - luci-app-frpc
+- luci-app-ddnsto
 
 ## Credits
 
