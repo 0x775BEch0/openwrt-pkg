@@ -7,7 +7,7 @@
 
 ## Usage
 
-- root:a7!@#
+- root:a7!@
 
 ## packages
 
