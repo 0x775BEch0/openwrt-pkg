@@ -46,8 +46,8 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         version=`git log -1 --format='%h'`
-        echo version:v$(date +"%Y%j")-${version}-${versionpk}
-        echo "::set-output name=version::v$(date +"%Y%j")-${version}-${versionpk}"
+        echo version:v$(date +"%g%j")-${version}-${versionpk}
+        echo "::set-output name=version::v$(date +"%g%j")-${version}-${versionpk}"
         echo "::set-output name=status::success"
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 

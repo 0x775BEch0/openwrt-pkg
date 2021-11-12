@@ -2,7 +2,7 @@
 # default-setting
 #
 uci set luci.main.lang=zh_cn
-uci set luci.main.mediaurlbase='/luci-static/bootstrap'
+uci set luci.main.mediaurlbase='/luci-static/argon'
 uci commit luci
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
@@ -28,6 +28,15 @@ uci commit firewall
 uci set fstab.@global[0].anon_mount=1
 uci commit fstab
 
+uci set dropbear.@dropbear[0].PasswordAuth='on'
+uci set dropbear.@dropbear[0].Port='22'
+uci set dropbear.@dropbear[0].Interface='wan'
+uci set dropbear.@dropbear[0].GatewayPorts='on'
+uci commit dropbear
+
+uci set ttyd.@ttyd[0].command='/usr/libexec/login.sh'
+uci commit ttyd
+
 # rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm
 # rm -f /usr/lib/lua/luci/view/admin_status/index/upnp.htm
 # rm -f /usr/lib/lua/luci/view/admin_status/index/ddns.htm
@@ -44,6 +53,15 @@ uci commit fstab
 # sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/usb_printer.lua
 # sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 # sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/shadowsocksr.lua
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/model/cbi/shadowsocksr/*
+sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/shadowsocksr/*
+sed -i 's/\"services\"/\"vpn\"/g' /usr/share/shadowsocksr/*
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/frp.lua
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/model/cbi/frp/*
+sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/frp/*
+sed -i 's/\"services\"/\"network\"/g' /usr/lib/lua/luci/controller/upnp.lua
+sed -i 's/services/network/g' /usr/lib/lua/luci/view/upnp_status.htm
 
 ln -sf /sbin/ip /usr/bin/ip
 sed -i 's#downloads.openwrt.org#mirrors.cloud.tencent.com/lede#g' /etc/opkg/distfeeds.conf
