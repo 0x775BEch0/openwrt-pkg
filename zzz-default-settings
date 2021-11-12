@@ -2,7 +2,7 @@
 # default-setting
 #
 uci set luci.main.lang=zh_cn
-uci set luci.main.mediaurlbase='/luci-static/argon'
+uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
@@ -15,7 +15,6 @@ uci set network.wan.type='bridge'
 uci set network.wan.ifname='eth0'
 # 默认内网 ip
 uci set network.lan.ipaddr='192.168.1.254'
-uci set network.lan.ifname='eth1'
 uci set network.lan.ifname='eth1'
 uci commit network
 
