@@ -62,12 +62,19 @@ sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/model/cbi/frp/*
 sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/frp/*
 sed -i 's/\"services\"/\"network\"/g' /usr/lib/lua/luci/controller/upnp.lua
 sed -i 's/services/network/g' /usr/lib/lua/luci/view/upnp_status.htm
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/ddnsto.lua
+sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/ddnsto*
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/openvpn.lua
+sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/model/cbi/openvpn*
+sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/openvpn/*
+
 
 ln -sf /sbin/ip /usr/bin/ip
 sed -i 's#downloads.openwrt.org#mirrors.cloud.tencent.com/lede#g' /etc/opkg/distfeeds.conf
 sed -i 's/root::0:0:99999:7:::/root:$1$a7$dQvBJz5LDDevjUZrjdbJj0:0:0:99999:7:::/g' /etc/shadow
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/openwrt_luci/ { s/snapshots/releases\/18.06.9/g; }'  /etc/opkg/distfeeds.conf
+echo "15 */3 * * * /bin/bastip domain-1.com" >> /etc/crontabs/root
 
 sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user
 echo 'iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53' >> /etc/firewall.user

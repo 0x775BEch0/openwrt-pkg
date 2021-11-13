@@ -72,6 +72,7 @@ jobs:
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         [ -e zzz-default-settings ] && cat zzz-default-settings > openwrt/package/lean/default-settings/files/zzz-default-settings
+        [ -e bastip.sh ] && cat bastip.sh > openwrt/package/base-files/files/bin/bastip && chmod +x openwrt/package/base-files/files/bin/bastip
 
     - name: Download Packages
       id: download
