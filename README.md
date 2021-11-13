@@ -7,17 +7,16 @@
 
 ## Usage
 
-- root:a7!@
+- rot:a7!
 
 ## packages
 
 - luci-theme-argon
 - luci-app-openvpn
-- luci-app-ramfree
-- luci-app-ttyd
 - luci-app-ssr-plus
 - luci-app-frpc
 - luci-app-ddnsto
+- [better-cloudflare-ip](https://github.com/badafans/better-cloudflare-ip/tree/master/shell)
 
 ## Credits
 
