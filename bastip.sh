@@ -6,6 +6,7 @@ declare -i speed
 bandwidth=5
 speed=bandwidth*128*1024
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
+_MYPID=$$
 while true
 do
     while true
@@ -370,8 +371,8 @@ done
     publicip=$(cat temp.txt | grep publicip= | cut -f 2- -d'=')
     colo=$(cat temp.txt | grep colo= | cut -f 2- -d'=')
     rm -rf temp.txt
-    cat /etc/hosts|grep -v "${domainlist}" |grep -v "^$" &> /tmp/hosts
-    cat /tmp/hosts &> /etc/hosts;
+    cat /etc/hosts|grep -v "${domainlist}" |grep -v "^$" &> /tmp/_hosts.${_MYPID}
+    cat /tmp/_hosts.${_MYPID} &> /etc/hosts;
     echo ${anycast} 1.1.1.1 ${domainlist} >> /etc/hosts
     echo 优选IP $anycast 满足 $bandwidth Mbps带宽需求
     echo 公网IP $publicip
