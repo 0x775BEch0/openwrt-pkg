@@ -54,7 +54,7 @@ uci commit ttyd
 # sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 # sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/shadowsocksr.lua
-sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/model/cbi/shadowsocksr/*
+sed -i 's/services/vpn/g' /usr/lib/lua/luci/model/cbi/shadowsocksr/*
 sed -i 's/services/vpn/g' /usr/lib/lua/luci/view/shadowsocksr/*
 sed -i 's/\"services\"/\"vpn\"/g' /usr/share/shadowsocksr/*
 sed -i 's/\"services\"/\"vpn\"/g' /usr/lib/lua/luci/controller/frp.lua
