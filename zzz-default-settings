@@ -74,7 +74,7 @@ sed -i 's#downloads.openwrt.org#mirrors.cloud.tencent.com/lede#g' /etc/opkg/dist
 sed -i 's/root::0:0:99999:7:::/root:$1$a7$dQvBJz5LDDevjUZrjdbJj0:0:0:99999:7:::/g' /etc/shadow
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/openwrt_luci/ { s/snapshots/releases\/18.06.9/g; }'  /etc/opkg/distfeeds.conf
-echo "15 */3 * * * /bin/bastip domain-1.com" >> /etc/crontabs/root
+echo "15 */3 * * * /bin/bastip domain-1.com > /var/log/bastip.log" >> /etc/crontabs/root
 # for bastip test
 mkdir -p /etc/ssrplus/
 echo 'speed.cloudflare.com' > /etc/ssrplus/white.list
