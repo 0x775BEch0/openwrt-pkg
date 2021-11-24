@@ -108,7 +108,6 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         mv /workdir/diff.config .
-        tar czvf packages.tgz packages
         rm -rf packages
         rm -rf openwrt-x86-64-generic-kernel.bin
         rm -rf openwrt-x86-64-generic.manifest
