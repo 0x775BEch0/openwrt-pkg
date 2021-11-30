@@ -12,6 +12,7 @@
 ## packages
 
 - luci-theme-argon
+- luci-app-dockerman
 - luci-app-openvpn
 - luci-app-ssr-plus
 - luci-app-frpc
