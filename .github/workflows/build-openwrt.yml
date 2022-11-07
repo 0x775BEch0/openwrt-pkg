@@ -64,6 +64,7 @@ jobs:
         echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >> feeds.conf.default
         echo 'src-git nas https://github.com/linkease/nas-packages' >> feeds.conf.default
         echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci' >> feeds.conf.default
+         echo 'src-git xray https://github.com/yichya/luci-app-xray' >> feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install -a -f
         echo "::set-output name=status::success"
